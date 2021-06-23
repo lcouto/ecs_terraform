@@ -1,13 +1,23 @@
-variable "fargate" {
+variable "region" {
+  default = "us-east-2"
+}
+
+variable "fargate_only" {
+  description = "Set to true if ecs cluster is only running on fargate"
   default = false
 }
 
+
+variable "private_subnets" {
+  description = "list IDs of private subnets"
+  default = []
+}
 variable "ecs_cluster_type" {
   default = "ec2"
 }
 variable "ecs_name" {
   description = "Name of cluster"
-  default     = "lorenzo_ecs"
+  default     = "example_ecs"
 }
 
 variable "container_insights" {
@@ -43,9 +53,9 @@ variable "services" {
   default = {
     hello_world = {
       image                              = "nginx"
-      cpu                                = 0
+      cpu                                = 512
       memory                             = 512
-      desired_count                      = 2
+      desired_count                      = 1
       deployment_maximum_percent         = 100
       deployment_minimum_healthy_percent = 0
     }

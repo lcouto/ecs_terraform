@@ -1,10 +1,10 @@
 resource "aws_autoscaling_group" "main" {
-  count               = var.fargate == false ? 1 : 0
+  count               = var.fargate_only == false ? 1 : 0
   name                = var.ecs_name
   desired_capacity    = var.desired_capacity
   max_size            = var.max_size
   min_size            = var.min_size
-  vpc_zone_identifier = module.vpc.private_subnets
+  vpc_zone_identifier = var.private_subnets == [] ? module.vpc[0].private_subnets : var.private_subnets
   # protect_from_scale_in     = true
 
 
@@ -44,7 +44,7 @@ data "template_file" "user_data" {
 # }
 
 resource "aws_launch_template" "main" {
-  count = var.fargate == false ? 1 : 0
+  count = var.fargate_only == false ? 1 : 0
   name  = var.ecs_name
   # image_id               = "ami-07c5733ede03faaba"
   image_id      = "ami-03921a191ab15cae7"

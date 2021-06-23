@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 module "vpc" {
+  count = var.private_subnets == [] ? 1 : 0
   source = "terraform-aws-modules/vpc/aws"
 
   name = "${var.ecs_name}_vpc"
@@ -20,7 +21,6 @@ module "vpc" {
     Environment = "dev"
   }
 }
-
 resource "aws_ecs_cluster" "main" {
   name               = var.ecs_name
   capacity_providers = length(aws_ecs_capacity_provider.main) == 1 ? [aws_ecs_capacity_provider.main[0].name] : []
@@ -32,7 +32,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_capacity_provider" "main" {
-  count = var.fargate == false ? 1 : 0
+  count = var.fargate_only == false ? 1 : 0
   name  = var.ecs_name
 
   auto_scaling_group_provider {
