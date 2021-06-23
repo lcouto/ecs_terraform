@@ -61,7 +61,3 @@ variable "services" {
     }
   }
 }
-
-variable "repo_name" {
-  default = "cloudpaasvalidacao-ecsallinone"
-}
